@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html ng-app='shopulate' lang='en'>
+    <head>
+        <meta charset='utf-8'>
+        <title>Shopulate</title>
+
+        <meta name='description' content=''>
+        <meta name='author' content=''>
+        <meta name='viewport' content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no'>
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+        <link rel='stylesheet' type='text/css' href='stylesheets/main.css'>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
+        <script src='js/main.js'></script>
+        <script src="js/controllers/login.js"></script>
+        <script src="js/controllers/inventory.js"></script>
+        <script src="js/factories/inventory.js"></script>
+
+    </head>
+    <body>
+      <section class='container' ng-controller='LoginController as lc'>
+          <header>
+              <section ng-hide="lc.user">
+                <form class="form-inline" novalidate name="loginForm" ng-submit="lc.addNewUser(loginForm)">
+                  <input ng-model="lc.user" ng-model-options="{updateOn: 'submit'}" type="text" required placeholder="Enter Name" class="form-control">
+                  <button class="btn btn-primary">Login</button>
+                </form>
+              </section>
+              <section ng-show="lc.user">
+                <button class="logout btn btn-primary" ng-click="lc.logout(loginForm)">Logout</button>
+                <p>User: {{ lc.user }}</p>
+                <time>{{ lc.time | date:'MMM d - h:mma'}}</time>
+
+              </section>
+          </header>
+      </section>
+
+      <section class='container' ng-controller='InventoryController as ic'>
+
+        <form class='form-inline' novalidate name="createForm" ng-submit="ic.addNewItem(createForm)">
+          <input ng-model="ic.newItem.name" type="text" required placeholder="Item name" class="form-control">
+          <input ng-model="ic.newItem.price" type="number" required placeholder="Item price" class="form-control">
+          <input ng-model="ic.newItem.quantity" type="number" required placeholder="Item quantity" class="form-control">
+          <input ng-model="ic.newItem.color" type="text" required placeholder="Item color" class="form-control">
+          <input ng-model="ic.newItem.discount" type="number" required placeholder="Item discount" class="form-control">
+          <button class="btn btn-primary">
+            <i class="glyphicon glyphicon-plus"></i>
+          </button>
+        </form>
+
+        <table class='table table-striped'>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>{{ ic.color }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="merch in ic.all | orderBy:'quantity'">
+              <td>{{ merch.name }}</td>
+              <td ng-show="ic.GBP === false">
+                {{ ic.priceConvert(merch) | currency }}
+                <img ng-show="merch.discount > 0" src="https://tiy-learn-content.s3.amazonaws.com/98350f05-sale_2.png">
+              </td>
+              <td ng-show="ic.GBP === true">
+                {{ ic.priceConvert(merch) * 0.7 | currency:"£" }}
+                <img ng-show="merch.discount > 0" src="https://tiy-learn-content.s3.amazonaws.com/98350f05-sale_2.png">
+              </td>
+              <td>
+                <button class="btn btn-default btn-xs" ng-click="ic.minusOne(merch)">-</button>
+                {{ merch.quantity | number : 0}}
+                <button class="btn btn-default btn-xs" ng-click="ic.plusOne(merch)">+</button>
+              </td>
+              <td>{{ merch.color }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <button ng-click='ic.convert()'>Convert</button>
+
+
+
+      </section>
+    </body>
+</html>

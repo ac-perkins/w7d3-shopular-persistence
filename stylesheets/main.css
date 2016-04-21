@@ -1,0 +1,15 @@
+input.ng-invalid.ng-touched, .ng-submitted input.ng-invalid {
+        border: 1px solid red;
+}
+
+td button {
+  width: 20px;
+}
+
+.container {
+  margin-top: 2%;
+}
+
+.logout {
+  float: right;
+}
